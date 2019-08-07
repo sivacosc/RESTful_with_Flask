@@ -25,12 +25,11 @@ def create_app(name):
     api.add_resource(Stores, '/stores')
     api.add_resource(UserRegister, '/register')
     return named_app
-# @app.before_first_request
-# def create_tables():
-#     db.create_all()
+
+
+app = create_app(__name__)
+jwt = JWT(app, authenticate, identity)
 
 
 if __name__ == "__main__":
-    app = create_app(__name__)
-    jwt = JWT(app, authenticate, identity)
-    app.run(port=5000, debug=True)
+    app.run()

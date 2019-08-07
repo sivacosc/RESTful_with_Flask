@@ -8,27 +8,19 @@ from resources.item import Item, Items
 from resources.store import Store, Stores
 
 
-def create_app(name):
-    named_app = Flask(name)
-    from db import db
-    db.init_app(named_app)
-    named_app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
-    named_app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    named_app.secret_key = 'siva'
-    with named_app.app_context():
-        db.create_all()
-    api = Api(named_app)
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.secret_key = 'siva'
 
-    api.add_resource(Item, '/item/<string:name>')
-    api.add_resource(Items, '/items')
-    api.add_resource(Store, '/store/<string:name>')
-    api.add_resource(Stores, '/stores')
-    api.add_resource(UserRegister, '/register')
-    return named_app
-
-
-app = create_app(__name__)
+api = Api(app)
 jwt = JWT(app, authenticate, identity)
+
+api.add_resource(Item, '/item/<string:name>')
+api.add_resource(Items, '/items')
+api.add_resource(Store, '/store/<string:name>')
+api.add_resource(Stores, '/stores')
+api.add_resource(UserRegister, '/register')
 
 
 if __name__ == "__main__":
